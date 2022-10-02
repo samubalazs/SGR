@@ -1,12 +1,14 @@
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import styled from "styled-components"
+
 import fetchRepositories from "../services/api"
 
 export const Home: React.FC = () => {
   const { data, error, isLoading } = useQuery(["repos"], fetchRepositories)
 
   const [count, setCount] = useState(0)
+  console.log(data)
 
   return (
     <>

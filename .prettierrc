@@ -1,5 +1,8 @@
 {
   "tabWidth": 2,
   "semi": false,
-  "no-console": true
+  "no-console": true,
+  "importOrder": ["^components/(.*)$", "^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }
