@@ -3,10 +3,9 @@ import "./App.css"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ThemeProvider } from "styled-components"
 import { Home } from "./containers/Home"
+import { colors } from "./constants/colors"
 
 function App() {
-  const [count, setCount] = useState(0)
-
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -15,14 +14,9 @@ function App() {
     },
   })
 
-  const theme = { default: "default" }
-
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={colors}>
       <QueryClientProvider client={queryClient}>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
         <Home />
       </QueryClientProvider>
     </ThemeProvider>
