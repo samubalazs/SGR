@@ -3,7 +3,6 @@ import fetchRepositories from "../services/api"
 
 export const Home: React.FC = () => {
   const { data, error, isLoading } = useQuery(["repos"], fetchRepositories)
-  console.log(data)
 
   return (
     <>
