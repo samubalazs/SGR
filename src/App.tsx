@@ -1,25 +1,34 @@
-import { useState } from "react"
-import "./App.css"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { ThemeProvider } from "styled-components"
-import { Home } from "./containers/Home"
-import { colors } from "./constants/colors"
+import { Col, Layout, Menu, Row } from "antd"
+import { useNavigate } from "react-router-dom"
+
+import { RouterContent } from "./components/RouterContent/RouterContent"
+import { menuItems } from "./constants/menuItems"
+
+const { Header, Content, Footer } = Layout
 
 function App() {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-      },
-    },
-  })
+  const navigate = useNavigate()
 
   return (
-    <ThemeProvider theme={colors}>
-      <QueryClientProvider client={queryClient}>
-        <Home />
-      </QueryClientProvider>
-    </ThemeProvider>
+    <Row justify="center">
+      <Col span={20}>
+        <Layout className="layout">
+          <Header>
+            <Menu
+              items={menuItems}
+              onClick={({ key }) => navigate(key)}
+              mode="horizontal"
+            />
+          </Header>
+          <Content style={{ padding: "0 50px" }}>
+            <RouterContent />
+          </Content>
+          <Footer style={{ textAlign: "center" }}>
+            Ant Design ©2018 Created by Ant UED
+          </Footer>
+        </Layout>
+      </Col>
+    </Row>
   )
 }
 

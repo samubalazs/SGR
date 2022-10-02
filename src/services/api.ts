@@ -1,4 +1,5 @@
 import axios from "axios"
+
 import { RepositoryData } from "../types"
 
 async function fetchRepositories() {
@@ -30,7 +31,7 @@ async function fetchRepositories() {
       ],
       []
     )
-  return result ?? []
+  return data ?? []
 }
 
 export default fetchRepositories
