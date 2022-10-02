@@ -8,6 +8,8 @@ export const RouterContent: React.FC = () => {
       <Route path="/" element={<Home />}>
         <Route path="search" element={<Home />} />
         <Route path="history" element={<Home />} />
+        <Route path="desktop" element={<Home />} />
+        <Route path="mobile" element={<Home />} />
       </Route>
     </Routes>
   )

@@ -1,5 +1,6 @@
 import { AppstoreOutlined } from "@ant-design/icons"
 import { Col, Dropdown, Layout, Menu, Row } from "antd"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
 
@@ -7,22 +8,39 @@ import logo from "./assets/logo.png"
 import { RouterContent } from "./components/RouterContent/RouterContent"
 import { dropMenuItems, menuItems } from "./constants/menuItems"
 
-const { Header, Content, Footer } = Layout
+const { Header, Content } = Layout
 
 function App() {
   const navigate = useNavigate()
 
-  const dropdownMenu = <MenuStyled items={dropMenuItems} />
+  const [colSpan, setColspan] = useState(20)
+
+  const dropdownMenu = (
+    <MenuStyled
+      items={dropMenuItems}
+      onClick={({ key }) => handleMenuClick(key)}
+    />
+  )
+
+  const handleMenuClick = (key: string) => {
+    if (key === "mobile") {
+      setColspan(10)
+    } else if (key === "desktop") {
+      setColspan(20)
+    }
+    navigate(key)
+  }
 
   return (
     <RowStyled justify="center">
-      <Col span={20}>
+      <Col span={colSpan}>
         <LayoutStyled>
           <HeaderStyled>
             <ImgStyled src={logo} />
             <MenuStyled
               items={menuItems}
-              onClick={({ key }) => navigate(key)}
+              defaultActiveFirst={true}
+              onClick={({ key }) => handleMenuClick(key)}
               mode="horizontal"
             />
             <Dropdown overlay={dropdownMenu} placement={"bottomRight"}>
