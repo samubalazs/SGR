@@ -1,11 +1,11 @@
 export const colors = {
-  body: {
+  container: {
     background: "#D3EBCD",
     text: "#ffffff",
+    border: "#AEDBCE",
   },
-  page: {
+  navigation: {
     background: "#AEDBCE",
-    border: "#635666",
   },
   normal: {
     background: "#839AA8",
