@@ -1,7 +1,7 @@
 import { useState } from "react"
-import reactLogo from "./assets/react.svg"
 import "./App.css"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ThemeProvider } from "styled-components"
 import { Home } from "./containers/Home"
 
 function App() {
@@ -15,13 +15,17 @@ function App() {
     },
   })
 
+  const theme = { default: "default" }
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <button onClick={() => setCount((count) => count + 1)}>
-        count is {count}
-      </button>
-      <Home />
-    </QueryClientProvider>
+    <ThemeProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <Home />
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 
