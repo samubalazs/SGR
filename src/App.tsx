@@ -85,7 +85,7 @@ const MoreIconStyled = styled(AppstoreOutlined)`
 `
 
 const ContentStyled = styled(Content)`
-  margin: 10px;
+  margin: 15px;
   padding: 10px;
   border: solid 1px ${({ theme }) => theme.container.border};
 `
