@@ -19,26 +19,42 @@ export const Search: React.FC = () => {
       {isLoading && "Loading..."}
       {error && "An error has occurred: " + error}
       <Wrapper isOpen={isOpen}>
-        <FormContainer>
-          <InputStyled placeholder="Search" />
-          <CheckboxStyled
-            options={plainOptions}
-            defaultValue={["Name"]}
-            onChange={() => true}
-          />
-          <Button icon={<SearchOutlined />}>Search</Button>
+        <StaticFormContainer>
+          <InputStyled>
+            <span>Search by</span>
+            <Input placeholder="Search" />
+          </InputStyled>
+          <InputStyled>
+            <span>In</span>
+            <CheckboxStyled
+              options={plainOptions}
+              defaultValue={["Name"]}
+              onChange={() => true}
+            />
+          </InputStyled>
+
           {isOpen && (
             <>
-              <InputStyled placeholder="Search" />
-              <CheckboxStyled
-                options={plainOptions}
-                defaultValue={["Name"]}
-                onChange={() => true}
-              />
-              <Button icon={<SearchOutlined />}>Search</Button>
+              <InputStyled>
+                <span>Search by</span>
+                <Input placeholder="Search" />
+              </InputStyled>
+              <InputStyled>
+                <span>In</span>
+                <CheckboxStyled
+                  options={plainOptions}
+                  defaultValue={["Name"]}
+                  onChange={() => true}
+                />
+              </InputStyled>
             </>
           )}
-        </FormContainer>
+        </StaticFormContainer>
+
+        <ControlContainer>
+          <Button icon={<SearchOutlined />}>Search</Button>
+          <Button>Reset</Button>
+        </ControlContainer>
         <Button
           type="primary"
           icon={isOpen ? <UpOutlined /> : <DownOutlined />}
@@ -54,17 +70,34 @@ const Wrapper = styled.div<{ isOpen: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  min-height: ${({ isOpen }) => (isOpen ? "500px" : "fit-content")};
+  min-height: ${({ isOpen }) => (isOpen ? "auto" : "fit-content")};
 `
 
-const FormContainer = styled.div`
+const StaticFormContainer = styled.div`
   display: grid;
-  grid-template-columns: 2fr 3fr 1fr;
-  gap: 20px;
+  grid-template-columns: 1fr 2fr;
+  gap: 8px;
 `
 
-const InputStyled = styled(Input)`
-  width: 200px;
+const InputStyled = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  span {
+    margin-right: 8px;
+  }
+
+  input {
+    width: 160px;
+  }
+`
+
+const ControlContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-self: flex-end;
+  gap: 8px;
 `
 
 const CheckboxStyled = styled(Checkbox.Group)`

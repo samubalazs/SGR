@@ -1,5 +1,5 @@
 import { AppstoreOutlined } from "@ant-design/icons"
-import { Col, Dropdown, Layout, Menu, Row } from "antd"
+import { Button, Col, Dropdown, Layout, Menu, Row } from "antd"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
@@ -36,15 +36,22 @@ function App() {
       <Col span={colSpan}>
         <LayoutStyled>
           <HeaderStyled>
-            <ImgStyled src={logo} />
-            <MenuStyled
-              items={menuItems}
-              defaultActiveFirst={true}
-              onClick={({ key }) => handleMenuClick(key)}
-              mode="horizontal"
-            />
+            <LeftContainer>
+              <ImgStyled src={logo} />
+              <MenuStyled
+                items={menuItems}
+                defaultActiveFirst={true}
+                onClick={({ key }) => handleMenuClick(key)}
+                mode="horizontal"
+              />
+            </LeftContainer>
+
             <Dropdown overlay={dropdownMenu} placement={"bottomRight"}>
-              <MoreIconStyled />
+              <MoreButtonStyled
+                icon={<AppstoreOutlined />}
+                size={"middle"}
+                type="primary"
+              />
             </Dropdown>
           </HeaderStyled>
           <ContentStyled>
@@ -67,6 +74,8 @@ const LayoutStyled = styled(Layout)`
 
 const HeaderStyled = styled(Header)`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: ${({ theme }) => theme.navigation.background};
   border-bottom: solid 1px ${({ theme }) => theme.normal.border};
   padding: 10px;
@@ -76,12 +85,11 @@ const HeaderStyled = styled(Header)`
 const MenuStyled = styled(Menu)`
   background: ${({ theme }) => theme.navigation.background};
   border-bottom: unset;
-  width: 100%;
 `
 
-const MoreIconStyled = styled(AppstoreOutlined)`
-  font-size: 150%;
-  line-height: 46px;
+const LeftContainer = styled.div`
+  display: flex;
+  gap: 10px;
 `
 
 const ContentStyled = styled(Content)`
@@ -92,6 +100,10 @@ const ContentStyled = styled(Content)`
 
 const ImgStyled = styled.img`
   height: 40px;
+`
+
+const MoreButtonStyled = styled(Button)`
+  margin-right: 16px;
 `
 
 export default App
