@@ -1,27 +1,39 @@
 import { DownOutlined, SearchOutlined, UpOutlined } from "@ant-design/icons"
 import { useQuery } from "@tanstack/react-query"
 import { Button, Checkbox, Form, Input } from "antd"
-import { useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import styled from "styled-components"
 
 import fetchRepositories from "../services/api"
 import { FormData } from "../types"
 
 export const Search: React.FC = () => {
-  const { data, error, isLoading } = useQuery(["repos"], fetchRepositories)
-
-  const [form] = Form.useForm()
   const initalFormData = {
     searchBy: "",
     searchIn: [],
   }
-
-  const [isOpen, setIsOpen] = useState(false)
   const [formData, setFormData] = useState<FormData>(initalFormData)
 
+  const [form] = Form.useForm()
+
+  const [isOpen, setIsOpen] = useState(false)
   const plainOptions = ["Name", "Description", "Readme"]
 
-  const handleSubmit = () => console.log(formData)
+  const searchQuery = useMemo(() => {
+    const queryParts = []
+
+    const searchIn = formData.searchIn.join(",") + ":" + formData.searchBy
+    queryParts.push(searchIn)
+
+    return queryParts.join("+")
+  }, [formData])
+
+  const { isLoading, error, data, refetch } = useQuery(
+    ["repoData", { enabled: false }],
+    () => fetchRepositories(searchQuery)
+  )
+
+  const handleSubmit = () => refetch()
   const handleReset = () => form.resetFields()
 
   return (
@@ -51,7 +63,7 @@ export const Search: React.FC = () => {
             label={"Search In"}
             rules={[{ required: true, message: "Please select at least one" }]}
           >
-            <CheckboxStyled options={plainOptions} />
+            <CheckboxStyled options={plainOptions} defaultValue={["Name"]} />
           </Form.Item>
           {isOpen && <>a</>}
         </FormContainer>

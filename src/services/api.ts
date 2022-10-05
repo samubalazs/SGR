@@ -2,9 +2,9 @@ import axios from "axios"
 
 import { RepositoryData } from "../types"
 
-async function fetchRepositories() {
+async function fetchRepositories(searchQuery: string) {
   const { data } = await axios.get(
-    "https://api.github.com/search/repositories?q=topic:typescript&state:open&sort=created&order=asc"
+    `https://api.github.com/search/repositories?q=${searchQuery}+state:open&sort=created&order=asc`
   )
   const result =
     data &&
@@ -31,7 +31,7 @@ async function fetchRepositories() {
       ],
       []
     )
-  return data ?? []
+  return result ?? []
 }
 
 export default fetchRepositories
