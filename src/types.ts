@@ -15,3 +15,8 @@ export type RepositoryData = {
   ownerUrl: string
   ownerAvatar: string
 }
+
+export type FormData = {
+  searchBy: string
+  searchIn: string[]
+}

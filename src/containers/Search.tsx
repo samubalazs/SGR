@@ -5,13 +5,21 @@ import { useState } from "react"
 import styled from "styled-components"
 
 import fetchRepositories from "../services/api"
+import { FormData } from "../types"
 
 export const Search: React.FC = () => {
   const { data, error, isLoading } = useQuery(["repos"], fetchRepositories)
+  const initalFormData = {
+    searchBy: "",
+    searchIn: [],
+  }
 
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
+  const [formData, setFormData] = useState<FormData>(initalFormData)
 
   const plainOptions = ["Name", "Description", "Readme"]
+
+  const handleSubmit = () => console.log(formData)
 
   return (
     <>
@@ -19,8 +27,8 @@ export const Search: React.FC = () => {
       {error && "An error has occurred: " + error}
       <Wrapper isOpen={isOpen}>
         <FormContainer
-          onValuesChange={(changedValues: any, values: unknown) =>
-            console.log(values)
+          onValuesChange={(changedValues: any, values: any) =>
+            setFormData({ ...values, ...changedValues })
           }
         >
           <Form.Item
@@ -28,7 +36,7 @@ export const Search: React.FC = () => {
             label={"Search By"}
             rules={[
               { required: true, message: "Please input your query!" },
-              { min: 3, message: "Query must be minimum 3 characters long" },
+              { min: 3, message: "Query must be min 3 chars long" },
             ]}
           >
             <Input placeholder={"Search By"} />
@@ -36,7 +44,7 @@ export const Search: React.FC = () => {
           <Form.Item
             name={"searchIn"}
             label={"Search In"}
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Please select at least one" }]}
           >
             <CheckboxStyled options={plainOptions} />
           </Form.Item>
@@ -44,7 +52,9 @@ export const Search: React.FC = () => {
         </FormContainer>
 
         <ControlContainer isOpen={isOpen}>
-          <Button icon={<SearchOutlined />}>Search</Button>
+          <Button icon={<SearchOutlined />} onClick={handleSubmit}>
+            Search
+          </Button>
           <Button>Reset</Button>
         </ControlContainer>
         <Button
