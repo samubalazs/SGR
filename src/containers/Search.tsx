@@ -9,6 +9,8 @@ import { FormData } from "../types"
 
 export const Search: React.FC = () => {
   const { data, error, isLoading } = useQuery(["repos"], fetchRepositories)
+
+  const [form] = Form.useForm()
   const initalFormData = {
     searchBy: "",
     searchIn: [],
@@ -20,6 +22,7 @@ export const Search: React.FC = () => {
   const plainOptions = ["Name", "Description", "Readme"]
 
   const handleSubmit = () => console.log(formData)
+  const handleReset = () => form.resetFields()
 
   return (
     <>
@@ -27,9 +30,11 @@ export const Search: React.FC = () => {
       {error && "An error has occurred: " + error}
       <Wrapper isOpen={isOpen}>
         <FormContainer
+          form={form}
           onValuesChange={(changedValues: any, values: any) =>
             setFormData({ ...values, ...changedValues })
           }
+          initialValues={initalFormData}
         >
           <Form.Item
             name={"searchBy"}
@@ -55,7 +60,7 @@ export const Search: React.FC = () => {
           <Button icon={<SearchOutlined />} onClick={handleSubmit}>
             Search
           </Button>
-          <Button>Reset</Button>
+          <Button onClick={handleReset}>Reset</Button>
         </ControlContainer>
         <Button
           type="primary"
