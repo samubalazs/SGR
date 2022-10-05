@@ -1,6 +1,6 @@
 import { DownOutlined, SearchOutlined, UpOutlined } from "@ant-design/icons"
 import { useQuery } from "@tanstack/react-query"
-import { Button, Checkbox, Input } from "antd"
+import { Button, Checkbox, Form, Input } from "antd"
 import { useState } from "react"
 import styled from "styled-components"
 
@@ -8,9 +8,8 @@ import fetchRepositories from "../services/api"
 
 export const Search: React.FC = () => {
   const { data, error, isLoading } = useQuery(["repos"], fetchRepositories)
-  console.log(data)
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
 
   const plainOptions = ["Name", "Description", "Readme"]
 
@@ -19,39 +18,32 @@ export const Search: React.FC = () => {
       {isLoading && "Loading..."}
       {error && "An error has occurred: " + error}
       <Wrapper isOpen={isOpen}>
-        <StaticFormContainer>
-          <InputStyled>
-            <span>Search by</span>
-            <Input placeholder="Search" />
-          </InputStyled>
-          <InputStyled>
-            <span>In</span>
-            <CheckboxStyled
-              options={plainOptions}
-              defaultValue={["Name"]}
-              onChange={() => true}
-            />
-          </InputStyled>
+        <FormContainer
+          onValuesChange={(changedValues: any, values: unknown) =>
+            console.log(values)
+          }
+        >
+          <Form.Item
+            name={"searchBy"}
+            label={"Search By"}
+            rules={[
+              { required: true, message: "Please input your query!" },
+              { min: 3, message: "Query must be minimum 3 characters long" },
+            ]}
+          >
+            <Input placeholder={"Search By"} />
+          </Form.Item>
+          <Form.Item
+            name={"searchIn"}
+            label={"Search In"}
+            rules={[{ required: true }]}
+          >
+            <CheckboxStyled options={plainOptions} />
+          </Form.Item>
+          {isOpen && <>a</>}
+        </FormContainer>
 
-          {isOpen && (
-            <>
-              <InputStyled>
-                <span>Search by</span>
-                <Input placeholder="Search" />
-              </InputStyled>
-              <InputStyled>
-                <span>In</span>
-                <CheckboxStyled
-                  options={plainOptions}
-                  defaultValue={["Name"]}
-                  onChange={() => true}
-                />
-              </InputStyled>
-            </>
-          )}
-        </StaticFormContainer>
-
-        <ControlContainer>
+        <ControlContainer isOpen={isOpen}>
           <Button icon={<SearchOutlined />}>Search</Button>
           <Button>Reset</Button>
         </ControlContainer>
@@ -68,35 +60,22 @@ export const Search: React.FC = () => {
 
 const Wrapper = styled.div<{ isOpen: boolean }>`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: flex-start;
+  gap: 15px;
   min-height: ${({ isOpen }) => (isOpen ? "auto" : "fit-content")};
 `
 
-const StaticFormContainer = styled.div`
+const FormContainer = styled(Form)`
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
 `
 
-const InputStyled = styled.div`
+const ControlContainer = styled.div<{ isOpen: boolean }>`
   display: flex;
   justify-content: flex-start;
-  align-items: center;
-
-  span {
-    margin-right: 8px;
-  }
-
-  input {
-    width: 160px;
-  }
-`
-
-const ControlContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-self: flex-end;
+  align-self: ${({ isOpen }) => (isOpen ? "flex-end" : "flex-start")};
   gap: 8px;
 `
 
