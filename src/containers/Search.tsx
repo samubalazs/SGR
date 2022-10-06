@@ -1,11 +1,11 @@
 import { DownOutlined, SearchOutlined, UpOutlined } from "@ant-design/icons"
-import { useQuery } from "@tanstack/react-query"
-import { Button, Checkbox, Form, Input } from "antd"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { Button, Checkbox, Divider, Form, Input } from "antd"
+import axios from "axios"
+import { useMemo, useState } from "react"
 import styled from "styled-components"
 
-import fetchRepositories from "../services/api"
-import { FormData } from "../types"
+import { Results } from "../components/ResultContainer/Results"
+import { FormData, RepositoryData } from "../types"
 
 export const Search: React.FC = () => {
   const initalFormData = {
@@ -13,6 +13,7 @@ export const Search: React.FC = () => {
     searchIn: [],
   }
   const [formData, setFormData] = useState<FormData>(initalFormData)
+  const [result, setResult] = useState<any[]>([])
 
   const [form] = Form.useForm()
 
@@ -28,18 +29,45 @@ export const Search: React.FC = () => {
     return queryParts.join("+")
   }, [formData])
 
-  const { isLoading, error, data, refetch } = useQuery(
-    ["repoData", { enabled: false }],
-    () => fetchRepositories(searchQuery)
-  )
+  const queryResult = useMemo<RepositoryData[]>(() => {
+    if (result.length) {
+      return result.reduce(
+        (acc: RepositoryData[], curr: any) => [
+          ...acc,
+          {
+            name: curr.name,
+            fullName: curr.full_name,
+            url: curr.html_url,
+            stars: curr.stargazers_count,
+            watchers: curr.watchers,
+            forks: curr.forks,
+            issues: curr.open_issues,
+            description: curr.description,
+            language: curr.language,
+            topics: curr.topics,
+            created: curr.created_at,
+            updated: curr.updated_at,
+            ownerName: curr.owner.login,
+            ownerUrl: curr.owner.url,
+            ownerAvatar: curr.owner.avatar_url,
+          },
+        ],
+        []
+      )
+    }
+  }, [result])
 
-  const handleSubmit = () => refetch()
+  async function handleSubmit() {
+    await axios
+      .get(
+        `https://api.github.com/search/repositories?q=${searchQuery}+state:open&sort=created&order=asc`
+      )
+      .then((resp) => setResult(resp.data.items))
+  }
   const handleReset = () => form.resetFields()
 
   return (
     <>
-      {isLoading && "Loading..."}
-      {error && "An error has occurred: " + error}
       <Wrapper isOpen={isOpen}>
         <FormContainer
           form={form}
@@ -63,7 +91,7 @@ export const Search: React.FC = () => {
             label={"Search In"}
             rules={[{ required: true, message: "Please select at least one" }]}
           >
-            <CheckboxStyled options={plainOptions} defaultValue={["Name"]} />
+            <CheckboxStyled options={plainOptions} />
           </Form.Item>
           {isOpen && <>a</>}
         </FormContainer>
@@ -81,6 +109,10 @@ export const Search: React.FC = () => {
           onClick={() => setIsOpen(!isOpen)}
         />
       </Wrapper>
+      <Divider>Search Result</Divider>
+      {queryResult && queryResult.length && (
+        <Results queryResult={queryResult} />
+      )}
     </>
   )
 }
