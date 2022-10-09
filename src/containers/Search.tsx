@@ -1,10 +1,10 @@
 import { DownOutlined, SearchOutlined, UpOutlined } from "@ant-design/icons"
 import { Button, Checkbox, Divider, Form, Input } from "antd"
 import axios from "axios"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import styled from "styled-components"
 
-import { Results } from "../components/ResultContainer/Results"
+import { ResultContainer } from "../components/ResultContainer/ResultContainer"
 import { FormData, RepositoryData } from "../types"
 
 export const Search: React.FC = () => {
@@ -13,7 +13,8 @@ export const Search: React.FC = () => {
     searchIn: [],
   }
   const [formData, setFormData] = useState<FormData>(initalFormData)
-  const [result, setResult] = useState<any[]>([])
+  const [queryResult, setQueryResult] = useState<any[]>([])
+  const [isLoading, setIsloading] = useState(false)
 
   const [form] = Form.useForm()
 
@@ -29,41 +30,41 @@ export const Search: React.FC = () => {
     return queryParts.join("+")
   }, [formData])
 
-  const queryResult = useMemo<RepositoryData[]>(() => {
-    if (result.length) {
-      return result.reduce(
-        (acc: RepositoryData[], curr: any) => [
-          ...acc,
-          {
-            name: curr.name,
-            fullName: curr.full_name,
-            url: curr.html_url,
-            stars: curr.stargazers_count,
-            watchers: curr.watchers,
-            forks: curr.forks,
-            issues: curr.open_issues,
-            description: curr.description,
-            language: curr.language,
-            topics: curr.topics,
-            created: curr.created_at,
-            updated: curr.updated_at,
-            ownerName: curr.owner.login,
-            ownerUrl: curr.owner.url,
-            ownerAvatar: curr.owner.avatar_url,
-          },
-        ],
-        []
-      )
-    }
-  }, [result])
-
   async function handleSubmit() {
+    setIsloading(true)
     await axios
       .get(
         `https://api.github.com/search/repositories?q=${searchQuery}+state:open&sort=created&order=asc`
       )
-      .then((resp) => setResult(resp.data.items))
+      .then((resp) => {
+        const formattedData = resp.data.items.reduce(
+          (acc: RepositoryData[], curr: any) => [
+            ...acc,
+            {
+              name: curr.name,
+              fullName: curr.full_name,
+              url: curr.html_url,
+              stars: curr.stargazers_count,
+              watchers: curr.watchers,
+              forks: curr.forks,
+              issues: curr.open_issues,
+              description: curr.description,
+              language: curr.language,
+              topics: curr.topics,
+              created: curr.created_at,
+              updated: curr.updated_at,
+              ownerName: curr.owner.login,
+              ownerUrl: curr.owner.url,
+              ownerAvatar: curr.owner.avatar_url,
+            },
+          ],
+          []
+        )
+        setQueryResult(formattedData)
+        setIsloading(false)
+      })
   }
+
   const handleReset = () => form.resetFields()
 
   return (
@@ -111,7 +112,7 @@ export const Search: React.FC = () => {
       </Wrapper>
       <Divider>Search Result</Divider>
       {queryResult && queryResult.length && (
-        <Results queryResult={queryResult} />
+        <ResultContainer queryResult={queryResult} isLoading={isLoading} />
       )}
     </>
   )
@@ -119,7 +120,7 @@ export const Search: React.FC = () => {
 
 const Wrapper = styled.div<{ isOpen: boolean }>`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: flex-start;
   gap: 15px;
   min-height: ${({ isOpen }) => (isOpen ? "auto" : "fit-content")};
