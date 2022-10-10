@@ -1,4 +1,4 @@
-import { Spin } from "antd"
+import { List, Spin } from "antd"
 import styled from "styled-components"
 
 import { RepositoryData } from "../../types"
@@ -15,11 +15,18 @@ export const ResultContainer: React.FC<ResultProps> = (props) => {
     <Wrapper>
       {isLoading && <Spin />}
       {!isLoading && queryResult && (
-        <ul>
-          {queryResult.map((item) => (
-            <li key={item.id}>{item.name}</li>
-          ))}
-        </ul>
+        <List
+          itemLayout="vertical"
+          size="large"
+          pagination={{
+            pageSize: 10,
+            style: { textAlign: "center" },
+          }}
+          dataSource={queryResult}
+          renderItem={(item) => (
+            <List.Item key={item.id}>{item.fullName}</List.Item>
+          )}
+        />
       )}
     </Wrapper>
   )
@@ -27,6 +34,6 @@ export const ResultContainer: React.FC<ResultProps> = (props) => {
 
 const Wrapper = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
 `
