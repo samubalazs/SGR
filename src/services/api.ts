@@ -7,6 +7,7 @@ const buildResult = (response: any): RepositoryData[] => {
   if (response) {
     response.map((curr: any) =>
       responseData.push({
+        id: curr.id,
         name: curr.name,
         fullName: curr.full_name,
         url: curr.html_url,

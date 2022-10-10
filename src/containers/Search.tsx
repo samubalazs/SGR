@@ -41,6 +41,7 @@ export const Search: React.FC = () => {
           (acc: RepositoryData[], curr: any) => [
             ...acc,
             {
+              id: curr.id,
               name: curr.name,
               fullName: curr.full_name,
               url: curr.html_url,

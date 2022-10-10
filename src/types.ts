@@ -1,4 +1,5 @@
 export type RepositoryData = {
+  id: number
   name: string
   fullName?: string
   url: string
