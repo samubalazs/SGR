@@ -21,7 +21,7 @@ const buildResult = (response: any): RepositoryData[] => {
         created: curr.created_at,
         updated: curr.updated_at,
         ownerName: curr.owner.login,
-        ownerUrl: curr.owner.url,
+        ownerUrl: curr.owner.html_url,
         ownerAvatar: curr.owner.avatar_url,
       })
     )

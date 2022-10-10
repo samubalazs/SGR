@@ -2,6 +2,7 @@ import { List, Spin } from "antd"
 import styled from "styled-components"
 
 import { RepositoryData } from "../../types"
+import { RepositoryCard } from "../RepositoryCard/RepositoryCard"
 
 type ResultProps = {
   queryResult: RepositoryData[]
@@ -23,8 +24,11 @@ export const ResultContainer: React.FC<ResultProps> = (props) => {
             style: { textAlign: "center" },
           }}
           dataSource={queryResult}
-          renderItem={(item) => (
-            <List.Item key={item.id}>{item.fullName}</List.Item>
+          renderItem={(repositoryDetails) => (
+            <RepositoryCard
+              key={repositoryDetails.id}
+              repositoryDetails={repositoryDetails}
+            />
           )}
         />
       )}
