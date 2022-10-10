@@ -55,7 +55,7 @@ export const Search: React.FC = () => {
               created: curr.created_at,
               updated: curr.updated_at,
               ownerName: curr.owner.login,
-              ownerUrl: curr.owner.url,
+              ownerUrl: curr.owner.html_url,
               ownerAvatar: curr.owner.avatar_url,
             },
           ],
@@ -98,18 +98,20 @@ export const Search: React.FC = () => {
           {isOpen && <>a</>}
         </FormContainer>
 
-        <ControlContainer isOpen={isOpen}>
-          <Button icon={<SearchOutlined />} onClick={handleSubmit}>
-            Search
-          </Button>
-          <Button onClick={handleReset}>Reset</Button>
-        </ControlContainer>
-        <Button
-          type="primary"
-          icon={isOpen ? <UpOutlined /> : <DownOutlined />}
-          size={"middle"}
-          onClick={() => setIsOpen(!isOpen)}
-        />
+        <RightPanel isOpen={isOpen}>
+          <ControlContainer isOpen={isOpen}>
+            <Button icon={<SearchOutlined />} onClick={handleSubmit}>
+              Search
+            </Button>
+            <Button onClick={handleReset}>Reset</Button>
+          </ControlContainer>
+          <Button
+            type="primary"
+            icon={isOpen ? <UpOutlined /> : <DownOutlined />}
+            size={"middle"}
+            onClick={() => setIsOpen(!isOpen)}
+          />
+        </RightPanel>
       </Wrapper>
       <Divider>Search Result</Divider>
       {queryResult && queryResult.length && (
@@ -122,7 +124,7 @@ export const Search: React.FC = () => {
 const Wrapper = styled.div<{ isOpen: boolean }>`
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: ${({ isOpen }) => (isOpen ? "inherit" : "flex-start")};
   gap: 15px;
   min-height: ${({ isOpen }) => (isOpen ? "auto" : "fit-content")};
 `
@@ -137,6 +139,12 @@ const ControlContainer = styled.div<{ isOpen: boolean }>`
   display: flex;
   justify-content: flex-start;
   align-self: ${({ isOpen }) => (isOpen ? "flex-end" : "flex-start")};
+  gap: 8px;
+`
+
+const RightPanel = styled.div<{ isOpen: boolean }>`
+  display: flex;
+  justify-content: flex-start;
   gap: 8px;
 `
 
