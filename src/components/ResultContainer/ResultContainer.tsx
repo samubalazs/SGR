@@ -17,7 +17,7 @@ export const ResultContainer: React.FC<ResultProps> = (props) => {
       {!isLoading && queryResult && (
         <ul>
           {queryResult.map((item) => (
-            <li>{item.name}</li>
+            <li key={item.id}>{item.name}</li>
           ))}
         </ul>
       )}
